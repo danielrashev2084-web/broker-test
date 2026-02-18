@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="bg">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Тест: Ставаш ли за брокер?</title>
+  <style>
+    :root { --b:#0b5cff; --bg:#0b1020; --card:#111a33; --txt:#eaf0ff; --muted:#a9b6e8; --ok:#20c997; --warn:#ffb020; --bad:#ff4d4f; }
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#070b16,#0b1020 40%,#070b16);color:var(--txt);}
+    .wrap{max-width:980px;margin:0 auto;padding:24px;}
+    .hero{background:radial-gradient(1200px 400px at 20% 0%,rgba(11,92,255,.25),transparent 60%),radial-gradient(900px 400px at 80% 0%,rgba(32,201,151,.18),transparent 60%);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:20px 18px;margin-bottom:18px;}
+    h1{margin:0 0 8px;font-size:26px;}
+    .sub{color:var(--muted);margin:0 0 14px;line-height:1.35}
+    .pill{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);padding:6px 10px;border-radius:999px;color:var(--muted);font-size:13px;margin-right:8px;margin-bottom:8px}
+    .card{background:rgba(17,26,51,.92);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:18px;margin:14px 0;}
+    .q{padding:14px 0;border-bottom:1px dashed rgba(255,255,255,.12)}
+    .q:last-child{border-bottom:none}
+    .q h3{margin:0 0 10px;font-size:16px;font-weight:650}
+    .scale{display:flex;gap:10px;flex-wrap:wrap}
+    .opt{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);padding:8px 10px;border-radius:12px;cursor:pointer}
+    .opt input{accent-color:var(--b);cursor:pointer}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .row > div{flex:1 1 240px}
+    label{display:block;color:var(--muted);font-size:13px;margin:0 0 6px}
+    input[type="text"], input[type="email"], input[type="tel"]{
+      width:100%;padding:12px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);color:var(--txt);outline:none;
+    }
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
+    button{border:0;border-radius:12px;padding:12px 14px;font-weight:700;cursor:pointer}
+    .btn{background:var(--b);color:white}
+    .btn2{background:rgba(255,255,255,.10);color:var(--txt);border:1px solid rgba(255,255,255,.14)}
+    .note{color:var(--muted);font-size:13px;line-height:1.35;margin-top:10px}
+    .result{display:none}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:800;margin:6px 0 12px}
+    .bad{background:rgba(255,77,79,.18);border:1px solid rgba(255,77,79,.35);color:#ffd7d7}
+    .mid{background:rgba(255,176,32,.18);border:1px solid rgba(255,176,32,.35);color:#ffe6b8}
+    .good{background:rgba(32,201,151,.18);border:1px solid rgba(32,201,151,.35);color:#c9fff0}
+    .score{font-size:40px;font-weight:900;margin:0}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    a.ctaBtn{display:inline-block;text-decoration:none;padding:12px 14px;border-radius:12px;font-weight:800}
+    .ctaPrimary{background:var(--ok);color:#062216}
+    .ctaSecondary{background:rgba(255,255,255,.10);color:var(--txt);border:1px solid rgba(255,255,255,.14)}
+    .tiny{font-size:12px;color:var(--muted)}
+    .error{display:none;color:#ffd7d7;background:rgba(255,77,79,.16);border:1px solid rgba(255,77,79,.35);padding:10px 12px;border-radius:12px;margin-top:12px}
+    .footer{color:var(--muted);font-size:12px;margin-top:16px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <h1>Тест: Ставаш ли за брокер на недвижими имоти?</h1>
+      <p class="sub">20 въпроса • 2–3 минути • получаваш резултат веднага (20–100 точки)</p>
+      <span class="pill">✔ Автоматично смята точки</span>
+      <span class="pill">✔ Показва резултат + CTA</span>
+      <span class="pill">✔ Без логин</span>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Име (по желание)</label>
+          <input id="name" type="text" placeholder="Напр. Иван Иванов" />
+        </div>
+        <div>
+          <label>Email (по желание)</label>
+          <input id="email" type="email" placeholder="email@domain.com" />
+        </div>
+        <div>
+          <label>Телефон (по желание)</label>
+          <input id="phone" type="tel" placeholder="+359..." />
+        </div>
+      </div>
+      <div class="note">
+        Оцени всяко твърдение от <b>1</b> до <b>5</b>: 1 = „не е вярно за мен“, 5 = „напълно вярно“.
+      </div>
+    </div>
+
+    <form id="quiz" class="card"></form>
+
+    <div class="card">
+      <div class="actions">
+        <button type="button" class="btn" id="calcBtn">Покажи резултат</button>
+        <button type="button" class="btn2" id="resetBtn">Изчисти</button>
+      </div>
+      <div class="error" id="errBox">Моля, отговори на всички въпроси (20/20), за да изчисля резултата.</div>
+      <div class="footer">* Данните не се изпращат никъде автоматично. Ако искаш да събираш лидове в таблица/CRM, кажи — ще го вържем.</div>
+    </div>
+
+    <div class="card result" id="resultBox">
+      <div id="badge" class="badge"></div>
+      <p class="tiny" id="who"></p>
+      <p class="score" id="scoreText">0</p>
+      <p class="sub" id="msg"></p>
+
+      <div class="cta">
+        <a class="ctaBtn ctaPrimary" id="cta1" href="#" target="_blank" rel="noopener">Запиши разговор</a>
+        <a class="ctaBtn ctaSecondary" id="cta2" href="#" target="_blank" rel="noopener">Виж как започваш</a>
+      </div>
+
+      <p class="tiny" style="margin-top:10px">
+        Скала: 0–40 „Не е за брокер“, 41–70 „Има потенциал“, 71–100 „Роден брокер“ (при 20 въпроса това е реално 20–100).
+      </p>
+    </div>
+  </div>
+
+<script>
+  // ===== Настройки (смени линковете към твоя Calendly/сайт) =====
+  const CTA_PRIMARY_URL = "https://calendly.com/";   // <-- смени
+  const CTA_SECONDARY_URL = "https://radarhomes.bg/"; // <-- смени
+
+  // ===== 20 въпроса (можеш да редактираш текста) =====
+  const QUESTIONS = [
+    "Лесно започвам разговор с непознати.",
+    "Комфортно ми е да звъня по телефона.",
+    "Обичам да убеждавам хората с аргументи.",
+    "Когато има отказ, не се отказвам бързо.",
+    "Мога да слушам внимателно, без да прекъсвам.",
+    "Работя добре без постоянен контрол.",
+    "Организирам си времето и спазвам срокове.",
+    "Предпочитам свобода пред сигурна заплата.",
+    "Искам доходът ми да зависи от резултата ми.",
+    "Готов съм да инвестирам време, преди да печеля много.",
+    "Не се притеснявам да поискам решение/„да затворя“ разговор.",
+    "Възраженията ги приемам като шанс да продължа, не като край.",
+    "Действам, вместо да чакам „перфектния момент“.",
+    "Комфортно ми е да защитя цената/стойността на услугата си.",
+    "Мотивира ме конкуренцията и идеята да съм топ.",
+    "Под напрежение мога да остана спокоен и полезен.",
+    "Когато нещо не става, сменям подход, вместо да се оправдавам.",
+    "Харесва ми да уча и да подобрявам уменията си постоянно.",
+    "Чувствам се ок с несигурност (няма гарантиран доход всеки месец).",
+    "Готов съм да изграждам личен бранд (видимост, съдържание, репутация)."
+  ];
+
+  // Render form
+  const form = document.getElementById("quiz");
+  QUESTIONS.forEach((text, idx) => {
+    const qNum = idx + 1;
+    const block = document.createElement("div");
+    block.className = "q";
+    block.innerHTML = `
+      <h3>${qNum}. ${text}</h3>
+      <div class="scale">
+        ${[1,2,3,4,5].map(v => `
+          <label class="opt">
+            <input type="radio" name="q${qNum}" value="${v}" />
+            <span>${v}</span>
+          </label>
+        `).join("")}
+      </div>
+    `;
+    form.appendChild(block);
+  });
+
+  // CTA links
+  document.getElementById("cta1").href = CTA_PRIMARY_URL;
+  document.getElementById("cta2").href = CTA_SECONDARY_URL;
+
+  function getScore() {
+    let total = 0;
+    for (let i = 1; i <= QUESTIONS.length; i++) {
+      const picked = document.querySelector(`input[name="q${i}"]:checked`);
+      if (!picked) return null;
+      total += parseInt(picked.value, 10);
+    }
+    return total;
+  }
+
+  function category(score) {
+    // NOTE: реалният диапазон при 20 въпроса е 20–100.
+    // Твоите прагове са 0–40 / 41–70 / 71–100 — оставяме ги 1:1 както поиска.
+    if (score <= 40) return "bad";
+    if (score <= 70) return "mid";
+    return "good";
+  }
+
+  function messages(score) {
+    const name = document.getElementById("name").value.trim();
+    const who = name ? `Резултат за: ${name}` : "";
+    const kind = category(score);
+
+    let badgeText = "";
+    let msg = "";
+    if (kind === "bad") {
+      badgeText = "0–40 точки: Не е за брокер (засега)";
+      msg = "Този профил обикновено се мъчи в брокерството. Ако все пак искаш да пробваш — ще ти трябва много дисциплина и среда.";
+    } else if (kind === "mid") {
+      badgeText = "41–70 точки: Имаш потенциал";
+      msg = "Имаш база. С правилно обучение, процес и среда можеш да станеш силен брокер. Следващата стъпка е да видиш реалния път и очакванията.";
+    } else {
+      badgeText = "71–100 точки: Роден брокер";
+      msg = "Имаш много силен профил — комуникация, устойчивост и продажбено мислене. Ако искаш, да направим кратък разговор и да ти кажа как започваме при нас.";
+    }
+    return { who, badgeText, msg, kind };
+  }
+
+  function showResult(score) {
+    const box = document.getElementById("resultBox");
+    const badge = document.getElementById("badge");
+    const who = document.getElementById("who");
+    const scoreText = document.getElementById("scoreText");
+    const msg = document.getElementById("msg");
+
+    const m = messages(score);
+
+    who.textContent = m.who;
+    scoreText.textContent = `${score} / 100 точки`;
+
+    badge.className = "badge " + (m.kind === "bad" ? "bad" : m.kind === "mid" ? "mid" : "good");
+    badge.textContent = m.badgeText;
+
+    msg.textContent = m.msg;
+    box.style.display = "block";
+    box.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  document.getElementById("calcBtn").addEventListener("click", () => {
+    const score = getScore();
+    const err = document.getElementById("errBox");
+    if (score === null) {
+      err.style.display = "block";
+      return;
+    }
+    err.style.display = "none";
+    showResult(score);
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", () => {
+    document.getElementById("quiz").reset();
+    document.getElementById("resultBox").style.display = "none";
+    document.getElementById("errBox").style.display = "none";
+  });
+</script>
+</body>
+</html>
